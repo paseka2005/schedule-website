@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <title>Расписание занятий</title>
+</head>
+<body>
+    <header>
+        <h1>Расписание занятий</h1>
+        <nav>
+            <ul>
+                <li><a href="#schedule">Расписание по группам</a></li>
+                <li><a href="#search">Поиск по преподавателю</a></li>
+                <li><a href="#updates">Обновления</a></li>
+                <li><a href="#download">Скачать</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="schedule">
+            <h2>Расписание по группам</h2>
+            <select id="groupSelect">
+                <option value="group1">ИС-211</option>
+                <option value="group2">ИС-212</option>
+                <option value="group3">ИС-311</option>
+                <option value="group3">П-101</option>
+                <option value="group3">П-102</option>
+            </select>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Время</th>
+                        <th>Предмет</th>
+                        <th>Кабинет</th>
+                        <th>Преподаватель</th>
+                    </tr>
+                </thead>
+                <tbody id="scheduleTableBody">
+                    <!-- Тут будет расписание -->
+                </tbody>
+            </table>
+        </section>
+        <section id="search" style="display:none;">
+            <input type="text" id="teacherInput" placeholder="Введите имя преподавателя">
+            <button onclick="searchTeacher()">Поиск</button>
+            <div id="searchResults"></div>
+        </section>
+        <section id="updates" style="display:none;">
+            <div id="updatesList">
+                <!-- Список обновлений -->
+            </div>
+        </section>
+        <section id="download" style="display:none;">
+            <button onclick="downloadSchedule()">Скачать расписание в PDF</button>
+        </section>
+    </main>
+    <footer>
+        <p>Контактная информация</p>
+    </footer>
+
+  <!-- Добавленная надпись -->
+    <div style="text-align: center; margin-top: 20px; font-size: 18px; font-weight: bold;">
+        РИНХ 2025
+    </div>
+    
+    <script>
+        const scheduleData = [
+            { date: "21.06.2025", time: "09:00-10:30", subject: "Математика", cabinet: "101", teacher: "Трищук С.А.", group: "group1" },
+            { date: "21.06.2025", time: "11:00-12:30", subject: "Физика", cabinet: "102", teacher: "Лазуренко И.Д.", group: "group1" },
+            { date: "21.06.2025", time: "09:00-10:30", subject: "История", cabinet: "103", teacher: "Горелько Е.А", group: "group2" }
+        ];
+
+        function fillScheduleTable(group) {
+            const tbody = document.getElementById('scheduleTableBody');
+            tbody.innerHTML = '';
+            const filteredData = scheduleData.filter(item => item.group === group);
+            filteredData.forEach(item => {
+                const row = `<tr>
+                    <td>${item.date}</td>
+                    <td>${item.time}</td>
+                    <td>${item.subject}</td>
+                    <td>${item.cabinet}</td>
+                    <td>${item.teacher}</td>
+                </tr>`;
+                tbody.innerHTML += row;
+            });
+        }
+
+        document.getElementById('groupSelect').addEventListener('change', (event) => {
+            fillScheduleTable(event.target.value);
+        });
+
+        function searchTeacher() {
+            const teacher = document.getElementById('teacherInput').value.toLowerCase();
+            const results = scheduleData.filter(item => item.teacher.toLowerCase().includes(teacher));
+            const resultsDiv = document.getElementById('searchResults');
+            resultsDiv.innerHTML = '';
+
+            if (results.length > 0) {
+                results.forEach(item => {
+                    resultsDiv.innerHTML += `<p>${item.subject} - ${item.date} (${item.time} в ${item.cabinet})</p>`;
+                });
+            } else {
+                resultsDiv.innerHTML = '<p>Преподаватель не найден.</p>';
+            }
+        }
+
+        function downloadSchedule() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.text("Расписание занятий", 20, 20);
+            const subjectData = scheduleData.map(item => 
+                `${item.subject} - ${item.date} (${item.time} в ${item.cabinet})`
+            );
+
+            subjectData.forEach((subject, index) => {
+                doc.text(subject, 20, 30 + (10 * index));
+            });
+
+            doc.save("schedule.pdf");
+        }
+
+        // Инициализация с первой группы
+        fillScheduleTable('group1');
+
+        // Добавляем обработчики событий для переключения между секциями
+        document.querySelector('a[href="#search"]').addEventListener('click', () => {
+            document.querySelector('#schedule').style.display = 'none';
+            document.querySelector('#search').style.display = 'block';
+            document.querySelector('#updates').style.display = 'none';
+            document.querySelector('#download').style.display = 'none';
+        });
+
+        document.querySelector('a[href="#updates"]').addEventListener('click', () => {
+            document.querySelector('#schedule').style.display = 'none';
+            document.querySelector('#search').style.display = 'none';
+            document.querySelector('#updates').style.display = 'block';
+            document.querySelector('#download').style.display = 'none';
+        });
+
+        document.querySelector('a[href="#download"]').addEventListener('click', () => {
+            document.querySelector('#schedule').style.display = 'none';
+            document.querySelector('#search').style.display = 'none';
+            document.querySelector('#updates').style.display = 'none';
+            document.querySelector('#download').style.display = 'block';
+        });
+
+        // Отображение расписания при загрузке страницы
+        document.querySelector('a[href="#schedule"]').addEventListener('click', () => {
+            document.querySelector('#schedule').style.display = 'block';
+            document.querySelector('#search').style.display = 'none';
+            document.querySelector('#updates').style.display = 'none';
+            document.querySelector('#download').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
