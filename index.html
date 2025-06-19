@@ -128,10 +128,6 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
-        .nav-link:hover::before {
-            left: 100%;
-        }
-        
         .nav-link.active {
             background-color: var(--nav-active-color);
             border-color: rgba(255, 255, 255, 0.3);
@@ -164,11 +160,6 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes fadeOut {
-            from { opacity: 1; transform: translateY(0); }
-            to { opacity: 0; transform: translateY(10px); }
         }
         
         section.active {
@@ -288,7 +279,7 @@
         
         .contact-btn {
             cursor: pointer;
-            color: var(--white);
+            color: var(--secondary-color);
             text-decoration: none;
             transition: color 0.3s;
             display: inline-flex;
@@ -298,6 +289,7 @@
             background: none;
             border: none;
             padding: 0.5rem;
+            color: var(--white);
             opacity: 0.9;
         }
         
@@ -318,7 +310,7 @@
             font-size: 0.9rem;
         }
         
-        .contact-info.active {
+        .contact-info.show {
             display: block;
             animation: fadeIn 0.3s ease;
         }
@@ -335,9 +327,9 @@
             margin: 10px 0;
             font-size: 1rem;
             font-weight: bold;
-            color: black;
+            color: var(--text-color);
             padding: 0.5rem;
-            background-color: white;
+            background-color: var(--white);
             border-radius: 4px;
         }
         
@@ -672,7 +664,7 @@
             <h2 id="search-heading"><i class="fas fa-search"></i> Поиск по преподавателю</h2>
             <div class="search-container">
                 <input type="text" id="teacherInput" placeholder="Введите фамилию преподавателя" aria-label="Фамилия преподавателя">
-                <button id="searchButton" onclick="searchTeacher()"><i class="fas fa-search"></i> Найти</button>
+                <button id="searchButton" onclick="ScheduleApp.searchTeacher()"><i class="fas fa-search"></i> Найти</button>
             </div>
             
             <div id="searchResults" class="search-results" aria-live="polite">
@@ -703,17 +695,17 @@
         <section id="download" aria-labelledby="download-heading">
             <h2 id="download-heading"><i class="fas fa-download"></i> Скачать расписание</h2>
             <div class="download-buttons">
-                <button onclick="downloadExcel()" style="background-color: var(--success-color);" aria-label="Скачать в Excel"><i class="fas fa-file-excel"></i> Excel</button>
+                <button onclick="ScheduleApp.downloadExcel()" style="background-color: var(--success-color);" aria-label="Скачать в Excel"><i class="fas fa-file-excel"></i> Excel</button>
             </div>
             <div class="download-info">
-                <p>Вы можете скачать текущее расписание в формате Excel для просмотра оффлайн.</p>
+                <p>Вы можете скачать текущее расписание в удобном формате для просмотра оффлайн.</p>
                 <p><i class="fas fa-info-circle"></i> Для просмотра файла рекомендуется использовать Microsoft Excel или аналогичную программу.</p>
             </div>
         </section>
     </main>
     
     <footer>
-        <button class="contact-btn" onclick="toggleContactInfo()" aria-expanded="false" aria-controls="contactInfo">
+        <button class="contact-btn" onclick="ScheduleApp.toggleContactInfo()" aria-expanded="false" aria-controls="contactInfo">
             <i class="fas fa-address-card"></i> Контактная информация
         </button>
         <div id="contactInfo" class="contact-info" role="region">
@@ -723,7 +715,7 @@
             <p><i class="fas fa-clock"></i> <strong>Режим работы:</strong> Пн-Пт: 8:00-17:00</p>
         </div>
         <div class="rinx-footer">
-            РИНХ © 2025
+            РИНХ©2025
         </div>
     </footer>
     
@@ -1030,9 +1022,6 @@
                 window.addEventListener('resize', this.debounce(() => {
                     this.checkScreenSize();
                 }, this.config.debounceTime));
-                
-                // Контактная информация
-                this.elements.contactBtn.addEventListener('click', () => this.toggleContactInfo());
             },
             
             // Переключение мобильного меню
@@ -1357,14 +1346,15 @@
             // Переключение контактной информации
             toggleContactInfo: function() {
                 this.state.isContactInfoVisible = !this.state.isContactInfoVisible;
-                const contactInfo = this.elements.contactInfo;
+                const contactInfo = document.getElementById('contactInfo');
+                const contactBtn = document.querySelector('.contact-btn');
                 
                 if (this.state.isContactInfoVisible) {
-                    contactInfo.classList.add('active');
-                    this.elements.contactBtn.setAttribute('aria-expanded', 'true');
+                    contactInfo.classList.add('show');
+                    contactBtn.setAttribute('aria-expanded', 'true');
                 } else {
-                    contactInfo.classList.remove('active');
-                    this.elements.contactBtn.setAttribute('aria-expanded', 'false');
+                    contactInfo.classList.remove('show');
+                    contactBtn.setAttribute('aria-expanded', 'false');
                 }
             },
             
@@ -1423,19 +1413,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             ScheduleApp.init();
         });
-        
-        // Глобальные функции для вызова из HTML
-        function searchTeacher() {
-            ScheduleApp.searchTeacher();
-        }
-        
-        function downloadExcel() {
-            ScheduleApp.downloadExcel();
-        }
-        
-        function toggleContactInfo() {
-            ScheduleApp.toggleContactInfo();
-        }
     </script>
 </body>
 </html>
