@@ -3,159 +3,1077 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/styles.css">
+    <title>Расписание занятий РИНХ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --hover-color: #2980b9;
+            --background-color: #f5f5f5;
+            --text-color: #333;
+            --white: #ffffff;
+            --light-gray: #f2f2f2;
+            --border-color: #ddd;
+            --nav-active-color: #1abc9c;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 1rem 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        nav ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .nav-link {
+            color: var(--white);
+            text-decoration: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-link:hover::before {
+            left: 100%;
+        }
+        
+        .nav-link.active {
+            background-color: var(--nav-active-color);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(26, 188, 156, 0.4);
+        }
+        
+        .nav-link.active:hover {
+            background-color: #16a085;
+        }
+        
+        main {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            min-height: calc(100vh - 300px);
+        }
+        
+        section {
+            background: var(--white);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        section.active {
+            display: block;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            font-size: 0.95rem;
+        }
+        
+        th, td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        th {
+            background-color: var(--light-gray);
+            font-weight: 600;
+            position: sticky;
+            top: 120px;
+            white-space: nowrap;
+        }
+        
+        tr:hover {
+            background-color: rgba(0,0,0,0.02);
+        }
+        
+        select, input {
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+            width: 100%;
+            max-width: 300px;
+            transition: border-color 0.3s;
+        }
+        
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        button {
+            padding: 10px 20px;
+            background-color: var(--secondary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        button:hover {
+            background-color: var(--hover-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: var(--primary-color);
+            color: var(--white);
+            margin-top: 2rem;
+        }
+        
+        .contact-btn {
+            cursor: pointer;
+            color: var(--secondary-color);
+            text-decoration: underline;
+            transition: color 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .contact-btn:hover {
+            color: var(--hover-color);
+        }
+        
+        .contact-info {
+            display: none;
+            background: var(--white);
+            padding: 1.5rem;
+            margin-top: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            color: var(--text-color);
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .contact-info p {
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .rinx-footer {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            padding: 1rem;
+        }
+        
+        .search-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .search-container input {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .search-results {
+            margin-top: 1.5rem;
+        }
+        
+        .result-item {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.3s;
+        }
+        
+        .result-item:hover {
+            background-color: var(--light-gray);
+        }
+        
+        .result-item p {
+            margin: 0.3rem 0;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+        
+        .update-item {
+            padding: 1rem 0;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        
+        .update-item:last-child {
+            border-bottom: none;
+        }
+        
+        .download-info {
+            margin-top: 1rem;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .week-day {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: center;
+            }
+            
+            .nav-link {
+                padding: 0.5rem 1rem;
+                width: 90%;
+                text-align: center;
+                justify-content: center;
+            }
+            
+            main {
+                padding: 0 0.5rem;
+            }
+            
+            section {
+                padding: 1rem;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+                font-size: 0.9rem;
+            }
+            
+            .search-container {
+                flex-direction: column;
+            }
+            
+            .search-container input, 
+            .search-container button {
+                width: 100%;
+                max-width: none;
+            }
+        }
+    </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <title>Расписание занятий</title>
+    <!-- Добавляем библиотеку SheetJS для работы с Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
     <header>
-        <h1>Расписание занятий</h1>
+        <h1>Расписание занятий РИНХ</h1>
         <nav>
             <ul>
-                <li><a href="#schedule">Расписание по группам</a></li>
-                <li><a href="#search">Поиск по преподавателю</a></li>
-                <li><a href="#updates">Обновления</a></li>
-                <li><a href="#download">Скачать</a></li>
+                <li><button class="nav-link active" data-section="schedule"><i class="fas fa-calendar-alt"></i> Расписание</button></li>
+                <li><button class="nav-link" data-section="search"><i class="fas fa-search"></i> Поиск</button></li>
+                <li><button class="nav-link" data-section="updates"><i class="fas fa-bell"></i> Обновления</button></li>
+                <li><button class="nav-link" data-section="download"><i class="fas fa-download"></i> Скачать</button></li>
             </ul>
         </nav>
     </header>
+    
     <main>
-        <section id="schedule">
-            <h2>Расписание по группам</h2>
+        <!-- Секция расписания -->
+        <section id="schedule" class="active">
+            <h2><i class="fas fa-users"></i> Расписание по группам</h2>
             <select id="groupSelect">
                 <option value="group1">ИС-211</option>
                 <option value="group2">ИС-212</option>
                 <option value="group3">ИС-311</option>
-                <option value="group3">П-101</option>
-                <option value="group3">П-102</option>
+                <option value="group4">П-101</option>
+                <option value="group5">П-102</option>
+                <option value="group6">ЭК-201</option>
+                <option value="group7">ЭК-202</option>
+                <option value="group8">ФК-301</option>
+                <option value="group9">МН-401</option>
+                <option value="group10">БИ-501</option>
             </select>
+            
             <table>
                 <thead>
                     <tr>
-                        <th>Дата</th>
-                        <th>Время</th>
-                        <th>Предмет</th>
-                        <th>Кабинет</th>
-                        <th>Преподаватель</th>
+                        <th><i class="fas fa-calendar-day"></i> Дата</th>
+                        <th><i class="fas fa-clock"></i> Время</th>
+                        <th><i class="fas fa-book"></i> Предмет</th>
+                        <th><i class="fas fa-door-open"></i> Кабинет</th>
+                        <th><i class="fas fa-chalkboard-teacher"></i> Преподаватель</th>
+                        <th><i class="fas fa-info-circle"></i> Тип занятия</th>
                     </tr>
                 </thead>
                 <tbody id="scheduleTableBody">
-                    <!-- Тут будет расписание -->
+                    <!-- Данные будут загружены через JavaScript -->
                 </tbody>
             </table>
         </section>
-        <section id="search" style="display:none;">
-            <input type="text" id="teacherInput" placeholder="Введите имя преподавателя">
-            <button onclick="searchTeacher()">Поиск</button>
-            <div id="searchResults"></div>
-        </section>
-        <section id="updates" style="display:none;">
-            <div id="updatesList">
-                <!-- Список обновлений -->
+        
+        <!-- Секция поиска -->
+        <section id="search">
+            <h2><i class="fas fa-search"></i> Поиск по преподавателю</h2>
+            <div class="search-container">
+                <input type="text" id="teacherInput" placeholder="Введите фамилию преподавателя">
+                <button onclick="searchTeacher()"><i class="fas fa-search"></i> Найти</button>
+            </div>
+            
+            <div id="searchResults" class="search-results">
+                <!-- Результаты поиска будут отображаться здесь -->
             </div>
         </section>
-        <section id="download" style="display:none;">
-            <button onclick="downloadSchedule()">Скачать расписание в PDF</button>
+        
+        <!-- Секция обновлений -->
+        <section id="updates">
+            <h2><i class="fas fa-bell"></i> Последние обновления</h2>
+            <div id="updatesList">
+                <div class="update-item">
+                    <p><i class="fas fa-check-circle" style="color: #27ae60;"></i> <strong>20.06.2025</strong> - Обновлено расписание для групп ИС-211 и ИС-212</p>
+                </div>
+                <div class="update-item">
+                    <p><i class="fas fa-check-circle" style="color: #27ae60;"></i> <strong>19.06.2025</strong> - Добавлены новые кабинеты в корпусе №3</p>
+                </div>
+                <div class="update-item">
+                    <p><i class="fas fa-check-circle" style="color: #27ae60;"></i> <strong>18.06.2025</strong> - Исправлены ошибки в расписании для группы П-101</p>
+                </div>
+                <div class="update-item">
+                    <p><i class="fas fa-check-circle" style="color: #27ae60;"></i> <strong>15.06.2025</strong> - Добавлены новые группы в систему</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Секция скачивания -->
+        <section id="download">
+            <h2><i class="fas fa-download"></i> Скачать расписание</h2>
+            <button onclick="downloadSchedule()"><i class="fas fa-file-pdf"></i> Скачать PDF</button>
+            <button onclick="downloadExcel()" style="background-color: #27ae60; margin-left: 10px;"><i class="fas fa-file-excel"></i> Скачать Excel</button>
+            <div class="download-info">
+                <p>Вы можете скачать текущее расписание в удобном формате для просмотра оффлайн.</p>
+                <p><i class="fas fa-info-circle"></i> Для просмотра файлов рекомендуется использовать соответствующие программы.</p>
+            </div>
         </section>
     </main>
+    
     <footer>
-        <p>Контактная информация</p>
+        <p><span class="contact-btn" onclick="toggleContactInfo()"><i class="fas fa-address-card"></i> Контактная информация</span></p>
+        <div id="contactInfo" class="contact-info">
+            <p><i class="fas fa-map-marker-alt"></i> <strong>Адрес:</strong> г. Ростов-на-Дону, ул. Большая Садовая, 69</p>
+            <p><i class="fas fa-phone"></i> <strong>Телефон:</strong> +7 (863) 123-45-67</p>
+            <p><i class="fas fa-envelope"></i> <strong>Email:</strong> info@rinch.ru</p>
+            <p><i class="fas fa-clock"></i> <strong>Режим работы:</strong> Пн-Пт: 8:00-17:00</p>
+        </div>
     </footer>
 
-  <!-- Добавленная надпись -->
-    <div style="text-align: center; margin-top: 20px; font-size: 18px; font-weight: bold;">
-        РИНХ 2025
+    <div class="rinx-footer">
+        Ростовский институт народного хозяйства © 2025
     </div>
     
     <script>
-        const scheduleData = [
-            { date: "21.06.2025", time: "09:00-10:30", subject: "Математика", cabinet: "101", teacher: "Трищук С.А.", group: "group1" },
-            { date: "21.06.2025", time: "11:00-12:30", subject: "Физика", cabinet: "102", teacher: "Лазуренко И.Д.", group: "group1" },
-            { date: "21.06.2025", time: "09:00-10:30", subject: "История", cabinet: "103", teacher: "Горелько Е.А", group: "group2" }
-        ];
-
-        function fillScheduleTable(group) {
-            const tbody = document.getElementById('scheduleTableBody');
-            tbody.innerHTML = '';
-            const filteredData = scheduleData.filter(item => item.group === group);
-            filteredData.forEach(item => {
-                const row = `<tr>
-                    <td>${item.date}</td>
-                    <td>${item.time}</td>
-                    <td>${item.subject}</td>
-                    <td>${item.cabinet}</td>
-                    <td>${item.teacher}</td>
-                </tr>`;
-                tbody.innerHTML += row;
-            });
-        }
-
-        document.getElementById('groupSelect').addEventListener('change', (event) => {
-            fillScheduleTable(event.target.value);
-        });
-
-        function searchTeacher() {
-            const teacher = document.getElementById('teacherInput').value.toLowerCase();
-            const results = scheduleData.filter(item => item.teacher.toLowerCase().includes(teacher));
-            const resultsDiv = document.getElementById('searchResults');
-            resultsDiv.innerHTML = '';
-
-            if (results.length > 0) {
-                results.forEach(item => {
-                    resultsDiv.innerHTML += `<p>${item.subject} - ${item.date} (${item.time} в ${item.cabinet})</p>`;
+        // Основные данные приложения
+        const app = {
+            // Данные расписания
+            scheduleData: [
+                // ИС-211
+                { 
+                    date: "21.06.2025 (Понедельник)", 
+                    time: "09:00-10:30", 
+                    subject: "Математический анализ", 
+                    cabinet: "101 (корпус 1)", 
+                    teacher: "Трищук С.А.", 
+                    group: "group1",
+                    type: "Лекция"
+                },
+                { 
+                    date: "21.06.2025 (Понедельник)", 
+                    time: "11:00-12:30", 
+                    subject: "Физика", 
+                    cabinet: "102 (корпус 1)", 
+                    teacher: "Лазуренко И.Д.", 
+                    group: "group1",
+                    type: "Практика"
+                },
+                { 
+                    date: "22.06.2025 (Вторник)", 
+                    time: "09:00-10:30", 
+                    subject: "Программирование на C++", 
+                    cabinet: "305 (корпус 3)", 
+                    teacher: "Иванов А.Б.", 
+                    group: "group1",
+                    type: "Лабораторная"
+                },
+                { 
+                    date: "22.06.2025 (Вторник)", 
+                    time: "11:00-12:30", 
+                    subject: "Базы данных", 
+                    cabinet: "306 (корпус 3)", 
+                    teacher: "Петрова В.Г.", 
+                    group: "group1",
+                    type: "Лекция"
+                },
+                { 
+                    date: "23.06.2025 (Среда)", 
+                    time: "14:00-15:30", 
+                    subject: "Иностранный язык", 
+                    cabinet: "412 (корпус 4)", 
+                    teacher: "Смирнова О.П.", 
+                    group: "group1",
+                    type: "Практика"
+                },
+                
+                // ИС-212
+                { 
+                    date: "21.06.2025 (Понедельник)", 
+                    time: "09:00-10:30", 
+                    subject: "История экономики", 
+                    cabinet: "203 (корпус 2)", 
+                    teacher: "Горелько Е.А.", 
+                    group: "group2",
+                    type: "Лекция"
+                },
+                { 
+                    date: "21.06.2025 (Понедельник)", 
+                    time: "11:00-12:30", 
+                    subject: "Экономическая теория", 
+                    cabinet: "204 (корпус 2)", 
+                    teacher: "Сидоров Д.Е.", 
+                    group: "group2",
+                    type: "Семинар"
+                },
+                { 
+                    date: "22.06.2025 (Вторник)", 
+                    time: "10:00-11:30", 
+                    subject: "Программирование на Python", 
+                    cabinet: "301 (корпус 3)", 
+                    teacher: "Иванов А.Б.", 
+                    group: "group2",
+                    type: "Лабораторная"
+                },
+                { 
+                    date: "23.06.2025 (Среда)", 
+                    time: "12:00-13:30", 
+                    subject: "Базы данных", 
+                    cabinet: "305 (корпус 3)", 
+                    teacher: "Петрова В.Г.", 
+                    group: "group2",
+                    type: "Практика"
+                },
+                
+                // ИС-311
+                { 
+                    date: "22.06.2025 (Вторник)", 
+                    time: "10:00-11:30", 
+                    subject: "Программирование на Python", 
+                    cabinet: "301 (корпус 3)", 
+                    teacher: "Иванов А.Б.", 
+                    group: "group3",
+                    type: "Лекция"
+                },
+                { 
+                    date: "22.06.2025 (Вторник)", 
+                    time: "12:00-13:30", 
+                    subject: "Базы данных", 
+                    cabinet: "305 (корпус 3)", 
+                    teacher: "Петрова В.Г.", 
+                    group: "group3",
+                    type: "Лабораторная"
+                },
+                { 
+                    date: "23.06.2025 (Среда)", 
+                    time: "14:00-15:30", 
+                    subject: "Экономическая теория", 
+                    cabinet: "412 (корпус 4)", 
+                    teacher: "Сидоров Д.Е.", 
+                    group: "group3",
+                    type: "Семинар"
+                },
+                
+                // П-101
+                { 
+                    date: "23.06.2025 (Среда)", 
+                    time: "14:00-15:30", 
+                    subject: "Экономическая теория", 
+                    cabinet: "412 (корпус 4)", 
+                    teacher: "Сидоров Д.Е.", 
+                    group: "group4",
+                    type: "Лекция"
+                },
+                { 
+                    date: "23.06.2025 (Среда)", 
+                    time: "16:00-17:30", 
+                    subject: "Бухгалтерский учет", 
+                    cabinet: "208 (корпус 2)", 
+                    teacher: "Козлова М.Н.", 
+                    group: "group4",
+                    type: "Практика"
+                },
+                
+                // П-102
+                { 
+                    date: "24.06.2025 (Четверг)", 
+                    time: "09:00-10:30", 
+                    subject: "Маркетинг", 
+                    cabinet: "105 (корпус 1)", 
+                    teacher: "Николаева О.П.", 
+                    group: "group5",
+                    type: "Лекция"
+                },
+                { 
+                    date: "24.06.2025 (Четверг)", 
+                    time: "11:00-12:30", 
+                    subject: "Менеджмент", 
+                    cabinet: "107 (корпус 1)", 
+                    teacher: "Волков С.И.", 
+                    group: "group5",
+                    type: "Семинар"
+                },
+                
+                // ЭК-201
+                { 
+                    date: "23.06.2025 (Среда)", 
+                    time: "16:00-17:30", 
+                    subject: "Бухгалтерский учет", 
+                    cabinet: "208 (корпус 2)", 
+                    teacher: "Козлова М.Н.", 
+                    group: "group6",
+                    type: "Лекция"
+                },
+                
+                // ЭК-202
+                { 
+                    date: "24.06.2025 (Четверг)", 
+                    time: "09:00-10:30", 
+                    subject: "Маркетинг", 
+                    cabinet: "105 (корпус 1)", 
+                    teacher: "Николаева О.П.", 
+                    group: "group7",
+                    type: "Семинар"
+                },
+                
+                // ФК-301
+                { 
+                    date: "25.06.2025 (Пятница)", 
+                    time: "10:00-11:30", 
+                    subject: "Финансовый анализ", 
+                    cabinet: "310 (корпус 3)", 
+                    teacher: "Белова Т.В.", 
+                    group: "group8",
+                    type: "Лекция"
+                },
+                
+                // МН-401
+                { 
+                    date: "25.06.2025 (Пятница)", 
+                    time: "12:00-13:30", 
+                    subject: "Математические методы в экономике", 
+                    cabinet: "315 (корпус 3)", 
+                    teacher: "Трищук С.А.", 
+                    group: "group9",
+                    type: "Практика"
+                },
+                
+                // БИ-501
+                { 
+                    date: "25.06.2025 (Пятница)", 
+                    time: "14:00-15:30", 
+                    subject: "Бизнес-информатика", 
+                    cabinet: "320 (корпус 3)", 
+                    teacher: "Иванов А.Б.", 
+                    group: "group10",
+                    type: "Лабораторная"
+                }
+            ],
+            
+            // Инициализация приложения
+            init: function() {
+                // Заполняем расписание для первой группы
+                this.fillScheduleTable('group1');
+                
+                // Настраиваем навигацию
+                this.setupNavigation();
+                
+                // Настраиваем обработчики событий
+                this.setupEventListeners();
+                
+                console.log('Приложение инициализировано');
+            },
+            
+            // Заполнение таблицы расписания
+            fillScheduleTable: function(group) {
+                const tbody = document.getElementById('scheduleTableBody');
+                tbody.innerHTML = '';
+                const filteredData = this.scheduleData.filter(item => item.group === group);
+                
+                if (filteredData.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 2rem; color: #666;">
+                                <i class="fas fa-calendar-times" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
+                                Нет данных о расписании для выбранной группы
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                let currentDate = '';
+                filteredData.forEach(item => {
+                    // Добавляем разделитель для нового дня
+                    if (item.date !== currentDate) {
+                        currentDate = item.date;
+                        const dayRow = `
+                            <tr class="week-day">
+                                <td colspan="6" style="font-weight: bold; background-color: #f1f8fe;">${item.date}</td>
+                            </tr>
+                        `;
+                        tbody.innerHTML += dayRow;
+                    }
+                    
+                    const row = `
+                        <tr>
+                            <td></td>
+                            <td>${item.time}</td>
+                            <td>${item.subject}</td>
+                            <td>${item.cabinet}</td>
+                            <td>${item.teacher}</td>
+                            <td>${item.type}</td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
                 });
-            } else {
-                resultsDiv.innerHTML = '<p>Преподаватель не найден.</p>';
+            },
+            
+            // Поиск преподавателя
+            searchTeacher: function() {
+                const teacher = document.getElementById('teacherInput').value.trim().toLowerCase();
+                const resultsDiv = document.getElementById('searchResults');
+                
+                if (!teacher) {
+                    resultsDiv.innerHTML = `
+                        <div class="no-results">
+                            <i class="fas fa-exclamation-circle" style="font-size: 2rem; color: #e74c3c; margin-bottom: 1rem;"></i>
+                            <p>Пожалуйста, введите фамилию преподавателя</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                const results = this.scheduleData.filter(item => 
+                    item.teacher.toLowerCase().includes(teacher)
+                );
+                
+                resultsDiv.innerHTML = '';
+
+                if (results.length > 0) {
+                    resultsDiv.innerHTML += `
+                        <h3 style="margin-bottom: 1rem;">
+                            <i class="fas fa-search"></i> Найдено ${results.length} занятий для преподавателя: ${teacher}
+                        </h3>
+                    `;
+                    
+                    results.forEach(item => {
+                        resultsDiv.innerHTML += `
+                            <div class="result-item">
+                                <p><strong><i class="fas fa-book"></i> ${item.subject}</strong> (${item.type})</p>
+                                <p><i class="fas fa-users"></i> Группа: ${this.getGroupName(item.group)}</p>
+                                <p><i class="fas fa-calendar-day"></i> ${item.date}, ${item.time}</p>
+                                <p><i class="fas fa-door-open"></i> ${item.cabinet}</p>
+                            </div>
+                        `;
+                    });
+                } else {
+                    resultsDiv.innerHTML = `
+                        <div class="no-results">
+                            <i class="fas fa-user-times" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                            <p>Преподаватель "${teacher}" не найден в расписании</p>
+                            <p>Попробуйте изменить запрос или проверьте правильность ввода</p>
+                        </div>
+                    `;
+                }
+            },
+            
+            // Получение названия группы по значению
+            getGroupName: function(groupValue) {
+                const select = document.getElementById('groupSelect');
+                for (let i = 0; i < select.options.length; i++) {
+                    if (select.options[i].value === groupValue) {
+                        return select.options[i].text;
+                    }
+                }
+                return groupValue;
+            },
+            
+            // Скачивание расписания в PDF
+            downloadSchedule: function() {
+                try {
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF();
+                    
+                    // Заголовок
+                    doc.setFontSize(18);
+                    doc.setTextColor(40, 40, 40);
+                    doc.text("Расписание занятий РИНХ", 105, 15, { align: 'center' });
+                    
+                    // Информация о группе
+                    const groupSelect = document.getElementById('groupSelect');
+                    const groupName = groupSelect.options[groupSelect.selectedIndex].text;
+                    
+                    doc.setFontSize(14);
+                    doc.text(`Группа: ${groupName}`, 14, 25);
+                    doc.text("Актуально на: " + new Date().toLocaleDateString(), 14, 32);
+                    
+                    // Данные расписания
+                    let y = 42;
+                    doc.setFontSize(10);
+                    
+                    // Заголовки таблицы
+                    doc.setTextColor(0, 0, 0);
+                    doc.setFont(undefined, 'bold');
+                    doc.text("Дата", 14, y);
+                    doc.text("Время", 50, y);
+                    doc.text("Предмет", 70, y);
+                    doc.text("Кабинет", 130, y);
+                    doc.text("Преподаватель", 160, y);
+                    doc.text("Тип", 190, y);
+                    
+                    y += 7;
+                    doc.line(14, y, 196, y);
+                    y += 10;
+                    
+                    // Содержимое таблицы
+                    doc.setFont(undefined, 'normal');
+                    const group = groupSelect.value;
+                    const filteredData = this.scheduleData.filter(item => item.group === group);
+                    
+                    let currentDate = '';
+                    filteredData.forEach((item, index) => {
+                        if (y > 280) {
+                            doc.addPage();
+                            y = 20;
+                            
+                            // Повторяем заголовки на новой странице
+                            doc.setFontSize(10);
+                            doc.setTextColor(0, 0, 0);
+                            doc.setFont(undefined, 'bold');
+                            doc.text("Дата", 14, y);
+                            doc.text("Время", 50, y);
+                            doc.text("Предмет", 70, y);
+                            doc.text("Кабинет", 130, y);
+                            doc.text("Преподаватель", 160, y);
+                            doc.text("Тип", 190, y);
+                            
+                            y += 7;
+                            doc.line(14, y, 196, y);
+                            y += 10;
+                            doc.setFont(undefined, 'normal');
+                        }
+                        
+                        // Добавляем дату, если она изменилась
+                        if (item.date !== currentDate) {
+                            currentDate = item.date;
+                            doc.setFont(undefined, 'bold');
+                            doc.text(item.date, 14, y);
+                            y += 7;
+                            doc.setFont(undefined, 'normal');
+                        }
+                        
+                        doc.text(item.time, 50, y);
+                        
+                        // Разбиваем длинные названия предметов на несколько строк
+                        const subjectLines = doc.splitTextToSize(item.subject, 50);
+                        doc.text(subjectLines, 70, y);
+                        
+                        doc.text(item.cabinet, 130, y);
+                        doc.text(item.teacher, 160, y);
+                        doc.text(item.type, 190, y);
+                        
+                        y += Math.max(10, subjectLines.length * 7);
+                        
+                        // Добавляем разделительную линию между записями
+                        if (index < filteredData.length - 1) {
+                            doc.line(14, y, 196, y);
+                            y += 5;
+                        }
+                    });
+                    
+                    // Сохраняем PDF
+                    doc.save(`Расписание_РИНХ_${groupName}_${new Date().toISOString().slice(0, 10)}.pdf`);
+                    
+                    // Показываем уведомление
+                    this.showNotification('Расписание успешно сохранено в PDF', 'success');
+                } catch (error) {
+                    console.error('Ошибка при создании PDF:', error);
+                    this.showNotification('Ошибка при создании PDF файла', 'error');
+                }
+            },
+            
+            // Скачивание в Excel
+            downloadExcel: function() {
+                try {
+                    const groupSelect = document.getElementById('groupSelect');
+                    const groupName = groupSelect.options[groupSelect.selectedIndex].text;
+                    const group = groupSelect.value;
+                    const filteredData = this.scheduleData.filter(item => item.group === group);
+                    
+                    if (filteredData.length === 0) {
+                        this.showNotification('Нет данных для выбранной группы', 'error');
+                        return;
+                    }
+                    
+                    // Подготовка данных для Excel
+                    const excelData = [
+                        ['Расписание занятий РИНХ'],
+                        [`Группа: ${groupName}`],
+                        [`Актуально на: ${new Date().toLocaleDateString()}`],
+                        [],
+                        ['Дата', 'Время', 'Предмет', 'Кабинет', 'Преподаватель', 'Тип занятия']
+                    ];
+                    
+                    let currentDate = '';
+                    filteredData.forEach(item => {
+                        // Добавляем дату, если она изменилась
+                        if (item.date !== currentDate) {
+                            currentDate = item.date;
+                            excelData.push([item.date, '', '', '', '', '']);
+                        }
+                        
+                        excelData.push([
+                            '', // Пустое поле для даты, так как она уже добавлена выше
+                            item.time,
+                            item.subject,
+                            item.cabinet,
+                            item.teacher,
+                            item.type
+                        ]);
+                    });
+                    
+                    // Создаем книгу Excel
+                    const wb = XLSX.utils.book_new();
+                    const ws = XLSX.utils.aoa_to_sheet(excelData);
+                    
+                    // Настраиваем ширину столбцов
+                    ws['!cols'] = [
+                        { wch: 20 }, // Дата
+                        { wch: 12 }, // Время
+                        { wch: 30 }, // Предмет
+                        { wch: 15 }, // Кабинет
+                        { wch: 20 }, // Преподаватель
+                        { wch: 15 }  // Тип занятия
+                    ];
+                    
+                    // Добавляем стили для заголовков
+                    const headerStyle = {
+                        font: { bold: true, color: { rgb: "FFFFFF" } },
+                        fill: { fgColor: { rgb: "2C3E50" } }
+                    };
+                    
+                    // Применяем стили к заголовкам
+                    for (let col = 0; col < 6; col++) {
+                        const cellRef = XLSX.utils.encode_cell({ r: 4, c: col });
+                        if (!ws[cellRef]) continue;
+                        
+                        ws[cellRef].s = headerStyle;
+                    }
+                    
+                    // Добавляем лист в книгу
+                    XLSX.utils.book_append_sheet(wb, ws, "Расписание");
+                    
+                    // Генерируем файл и скачиваем
+                    XLSX.writeFile(wb, `Расписание_РИНХ_${groupName}_${new Date().toISOString().slice(0, 10)}.xlsx`);
+                    
+                    // Показываем уведомление
+                    this.showNotification('Расписание успешно сохранено в Excel', 'success');
+                } catch (error) {
+                    console.error('Ошибка при создании Excel:', error);
+                    this.showNotification('Ошибка при создании Excel файла', 'error');
+                }
+            },
+            
+            // Показ уведомлений
+            showNotification: function(message, type) {
+                const notification = document.createElement('div');
+                notification.style.position = 'fixed';
+                notification.style.bottom = '20px';
+                notification.style.right = '20px';
+                notification.style.padding = '15px 20px';
+                notification.style.borderRadius = '4px';
+                notification.style.color = 'white';
+                notification.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+                notification.style.zIndex = '1000';
+                notification.style.animation = 'fadeIn 0.3s ease';
+                
+                if (type === 'success') {
+                    notification.style.backgroundColor = '#27ae60';
+                } else if (type === 'error') {
+                    notification.style.backgroundColor = '#e74c3c';
+                } else {
+                    notification.style.backgroundColor = '#3498db';
+                }
+                
+                notification.innerHTML = `
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i> ${message}
+                `;
+                
+                document.body.appendChild(notification);
+                
+                // Автоматическое скрытие через 3 секунды
+                setTimeout(() => {
+                    notification.style.animation = 'fadeOut 0.3s ease';
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 3000);
+            },
+            
+            // Переключение контактной информации
+            toggleContactInfo: function() {
+                const contactInfo = document.getElementById('contactInfo');
+                if (contactInfo.style.display === 'block') {
+                    contactInfo.style.animation = 'fadeOut 0.3s ease';
+                    setTimeout(() => {
+                        contactInfo.style.display = 'none';
+                    }, 300);
+                } else {
+                    contactInfo.style.display = 'block';
+                    contactInfo.style.animation = 'fadeIn 0.3s ease';
+                }
+            },
+            
+            // Настройка навигации
+            setupNavigation: function() {
+                const navLinks = document.querySelectorAll('.nav-link');
+                const sections = document.querySelectorAll('main > section');
+                
+                navLinks.forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        
+                        navLinks.forEach(l => l.classList.remove('active'));
+                        link.classList.add('active');
+                        
+                        sections.forEach(section => section.classList.remove('active'));
+                        const sectionId = link.getAttribute('data-section');
+                        document.getElementById(sectionId).classList.add('active');
+                    });
+                });
+            },
+            
+            // Настройка обработчиков событий
+            setupEventListeners: function() {
+                // Обработчик изменения выбора группы
+                document.getElementById('groupSelect').addEventListener('change', (event) => {
+                    this.fillScheduleTable(event.target.value);
+                });
+                
+                // Поиск при нажатии Enter в поле ввода
+                document.getElementById('teacherInput').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        this.searchTeacher();
+                    }
+                });
             }
+        };
+        
+        // Инициализация приложения при загрузке страницы
+        document.addEventListener('DOMContentLoaded', () => {
+            app.init();
+        });
+        
+        // Глобальные функции для вызова из HTML
+        function searchTeacher() {
+            app.searchTeacher();
         }
-
+        
         function downloadSchedule() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            doc.text("Расписание занятий", 20, 20);
-            const subjectData = scheduleData.map(item => 
-                `${item.subject} - ${item.date} (${item.time} в ${item.cabinet})`
-            );
-
-            subjectData.forEach((subject, index) => {
-                doc.text(subject, 20, 30 + (10 * index));
-            });
-
-            doc.save("schedule.pdf");
+            app.downloadSchedule();
         }
-
-        // Инициализация с первой группы
-        fillScheduleTable('group1');
-
-        // Добавляем обработчики событий для переключения между секциями
-        document.querySelector('a[href="#search"]').addEventListener('click', () => {
-            document.querySelector('#schedule').style.display = 'none';
-            document.querySelector('#search').style.display = 'block';
-            document.querySelector('#updates').style.display = 'none';
-            document.querySelector('#download').style.display = 'none';
-        });
-
-        document.querySelector('a[href="#updates"]').addEventListener('click', () => {
-            document.querySelector('#schedule').style.display = 'none';
-            document.querySelector('#search').style.display = 'none';
-            document.querySelector('#updates').style.display = 'block';
-            document.querySelector('#download').style.display = 'none';
-        });
-
-        document.querySelector('a[href="#download"]').addEventListener('click', () => {
-            document.querySelector('#schedule').style.display = 'none';
-            document.querySelector('#search').style.display = 'none';
-            document.querySelector('#updates').style.display = 'none';
-            document.querySelector('#download').style.display = 'block';
-        });
-
-        // Отображение расписания при загрузке страницы
-        document.querySelector('a[href="#schedule"]').addEventListener('click', () => {
-            document.querySelector('#schedule').style.display = 'block';
-            document.querySelector('#search').style.display = 'none';
-            document.querySelector('#updates').style.display = 'none';
-            document.querySelector('#download').style.display = 'none';
-        });
+        
+        function downloadExcel() {
+            app.downloadExcel();
+        }
+        
+        function toggleContactInfo() {
+            app.toggleContactInfo();
+        }
     </script>
 </body>
 </html>
