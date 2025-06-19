@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Расписание занятий РИНХ</title>
+    <title>Расписание занятий</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
@@ -16,25 +16,27 @@
             --light-gray: #f2f2f2;
             --border-color: #ddd;
             --nav-active-color: #1abc9c;
+            --mobile-breakpoint: 768px;
         }
         
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
-            margin: 0;
-            padding: 0;
             color: var(--text-color);
             background-color: var(--background-color);
+            -webkit-text-size-adjust: 100%;
         }
         
         header {
             background-color: var(--primary-color);
             color: var(--white);
-            padding: 1rem 0;
+            padding: 1rem;
             text-align: center;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             position: sticky;
@@ -42,12 +44,28 @@
             z-index: 100;
         }
         
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        
         nav ul {
             list-style: none;
             padding: 0;
             display: flex;
             justify-content: center;
-            gap: 1.5rem;
+            gap: 1rem;
             margin-top: 1rem;
             flex-wrap: wrap;
         }
@@ -55,7 +73,7 @@
         .nav-link {
             color: var(--white);
             text-decoration: none;
-            padding: 0.7rem 1.5rem;
+            padding: 0.7rem 1rem;
             border-radius: 30px;
             transition: all 0.3s ease;
             display: flex;
@@ -65,8 +83,10 @@
             background-color: rgba(255, 255, 255, 0.1);
             border: 2px solid transparent;
             font-weight: 500;
+            font-size: 0.9rem;
             position: relative;
             overflow: hidden;
+            white-space: nowrap;
         }
         
         .nav-link::before {
@@ -86,10 +106,6 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
-        .nav-link:hover::before {
-            left: 100%;
-        }
-        
         .nav-link.active {
             background-color: var(--nav-active-color);
             border-color: rgba(255, 255, 255, 0.3);
@@ -103,15 +119,15 @@
         
         main {
             max-width: 1400px;
-            margin: 2rem auto;
+            margin: 1rem auto;
             padding: 0 1rem;
-            min-height: calc(100vh - 300px);
+            min-height: calc(100vh - 180px);
         }
         
         section {
             background: var(--white);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             display: none;
@@ -127,25 +143,40 @@
             display: block;
         }
         
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        h2 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 1rem;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
+            table-layout: fixed;
         }
         
         th, td {
-            padding: 14px 16px;
+            padding: 10px 12px;
             text-align: left;
             border-bottom: 1px solid var(--border-color);
+            word-wrap: break-word;
         }
         
         th {
             background-color: var(--light-gray);
             font-weight: 600;
             position: sticky;
-            top: 120px;
+            top: 80px;
             white-space: nowrap;
         }
         
@@ -154,13 +185,15 @@
         }
         
         select, input {
-            padding: 10px 15px;
+            padding: 10px 12px;
             border: 1px solid var(--border-color);
             border-radius: 4px;
             font-size: 1rem;
             width: 100%;
-            max-width: 300px;
             transition: border-color 0.3s;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
         }
         
         select:focus, input:focus {
@@ -170,7 +203,7 @@
         }
         
         button {
-            padding: 10px 20px;
+            padding: 10px 15px;
             background-color: var(--secondary-color);
             color: var(--white);
             border: none;
@@ -181,6 +214,8 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+            width: 100%;
+            justify-content: center;
         }
         
         button:hover {
@@ -195,10 +230,11 @@
         
         footer {
             text-align: center;
-            padding: 1.5rem;
+            padding: 1rem;
             background-color: var(--primary-color);
             color: var(--white);
             margin-top: 2rem;
+            font-size: 0.9rem;
         }
         
         .contact-btn {
@@ -209,6 +245,7 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+            font-size: 0.9rem;
         }
         
         .contact-btn:hover {
@@ -218,7 +255,7 @@
         .contact-info {
             display: none;
             background: var(--white);
-            padding: 1.5rem;
+            padding: 1rem;
             margin-top: 1rem;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -226,6 +263,7 @@
             max-width: 500px;
             margin-left: auto;
             margin-right: auto;
+            font-size: 0.9rem;
         }
         
         .contact-info p {
@@ -237,31 +275,31 @@
         
         .rinx-footer {
             text-align: center;
-            margin: 20px 0;
-            font-size: 1.1rem;
+            margin: 10px 0;
+            font-size: 1rem;
             font-weight: bold;
             color: var(--primary-color);
-            padding: 1rem;
+            padding: 0.5rem;
         }
         
         .search-container {
             display: flex;
+            flex-direction: column;
             gap: 10px;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
+            margin-bottom: 1rem;
         }
         
         .search-container input {
             flex: 1;
-            min-width: 200px;
         }
         
         .search-results {
-            margin-top: 1.5rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
         }
         
         .result-item {
-            padding: 1rem;
+            padding: 0.8rem;
             border-bottom: 1px solid var(--border-color);
             transition: background-color 0.3s;
         }
@@ -276,13 +314,20 @@
         
         .no-results {
             text-align: center;
-            padding: 2rem;
+            padding: 1.5rem;
             color: #666;
         }
         
+        .no-results i {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
         .update-item {
-            padding: 1rem 0;
+            padding: 0.8rem 0;
             border-bottom: 1px dashed var(--border-color);
+            font-size: 0.9rem;
         }
         
         .update-item:last-child {
@@ -293,6 +338,7 @@
             margin-top: 1rem;
             color: #666;
             line-height: 1.6;
+            font-size: 0.9rem;
         }
         
         .week-day {
@@ -300,19 +346,41 @@
             font-weight: bold;
         }
         
-        /* Адаптивность */
+        .download-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+        
+        .download-buttons button {
+            flex: 1;
+        }
+        
+        /* Стили для мобильных устройств */
         @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+            
+            nav {
+                display: none;
+            }
+            
+            nav.active {
+                display: block;
+            }
+            
             nav ul {
                 flex-direction: column;
                 gap: 0.5rem;
-                align-items: center;
+                align-items: stretch;
             }
             
             .nav-link {
-                padding: 0.5rem 1rem;
-                width: 90%;
+                width: 100%;
                 text-align: center;
                 justify-content: center;
+                padding: 0.7rem;
             }
             
             main {
@@ -320,33 +388,110 @@
             }
             
             section {
-                padding: 1rem;
+                padding: 0.8rem;
+            }
+            
+            h1 {
+                font-size: 1.3rem;
+            }
+            
+            h2 {
+                font-size: 1.1rem;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+                font-size: 0.8rem;
             }
             
             th, td {
                 padding: 8px 10px;
-                font-size: 0.9rem;
+                font-size: 0.8rem;
             }
             
-            .search-container {
+            th {
+                top: 60px;
+            }
+            
+            .download-buttons {
                 flex-direction: column;
+                gap: 8px;
             }
             
-            .search-container input, 
-            .search-container button {
+            .download-buttons button {
                 width: 100%;
-                max-width: none;
+            }
+        }
+        
+        /* Анимации */
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        
+        /* Улучшенное отображение таблицы на мобильных */
+        @media (max-width: 480px) {
+            table {
+                display: block;
+            }
+            
+            thead {
+                display: none;
+            }
+            
+            tr {
+                display: block;
+                margin-bottom: 1rem;
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                padding: 0.5rem;
+            }
+            
+            td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.5rem;
+                border-bottom: 1px solid #eee;
+            }
+            
+            td:before {
+                content: attr(data-label);
+                font-weight: bold;
+                margin-right: 1rem;
+                flex: 1;
+            }
+            
+            td:last-child {
+                border-bottom: none;
+            }
+            
+            .week-day td {
+                justify-content: center;
+                font-weight: bold;
+                background-color: #f8f9fa;
+                border-bottom: none;
+            }
+            
+            .week-day td:before {
+                display: none;
             }
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <!-- Добавляем библиотеку SheetJS для работы с Excel -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
     <header>
-        <h1>Расписание занятий </h1>
-        <nav>
+        <div class="header-content">
+            <h1>Расписание занятий</h1>
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <nav id="mainNav">
             <ul>
                 <li><button class="nav-link active" data-section="schedule"><i class="fas fa-calendar-alt"></i> Расписание</button></li>
                 <li><button class="nav-link" data-section="search"><i class="fas fa-search"></i> Поиск</button></li>
@@ -425,8 +570,10 @@
         <!-- Секция скачивания -->
         <section id="download">
             <h2><i class="fas fa-download"></i> Скачать расписание</h2>
-            <button onclick="downloadSchedule()"><i class="fas fa-file-pdf"></i> Скачать PDF</button>
-            <button onclick="downloadExcel()" style="background-color: #27ae60; margin-left: 10px;"><i class="fas fa-file-excel"></i> Скачать Excel</button>
+            <div class="download-buttons">
+                <button onclick="downloadSchedule()"><i class="fas fa-file-pdf"></i> PDF</button>
+                <button onclick="downloadExcel()" style="background-color: #27ae60;"><i class="fas fa-file-excel"></i> Excel</button>
+            </div>
             <div class="download-info">
                 <p>Вы можете скачать текущее расписание в удобном формате для просмотра оффлайн.</p>
                 <p><i class="fas fa-info-circle"></i> Для просмотра файлов рекомендуется использовать соответствующие программы.</p>
@@ -674,6 +821,9 @@
                 // Настраиваем обработчики событий
                 this.setupEventListeners();
                 
+                // Адаптируем таблицу для мобильных устройств
+                this.adaptTableForMobile();
+                
                 console.log('Приложение инициализировано');
             },
             
@@ -686,9 +836,9 @@
                 if (filteredData.length === 0) {
                     tbody.innerHTML = `
                         <tr>
-                            <td colspan="6" style="text-align: center; padding: 2rem; color: #666;">
-                                <i class="fas fa-calendar-times" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
-                                Нет данных о расписании для выбранной группы
+                            <td colspan="6" style="text-align: center; padding: 1.5rem; color: #666;">
+                                <i class="fas fa-calendar-times"></i>
+                                <p style="margin-top: 0.5rem;">Нет данных о расписании для выбранной группы</p>
                             </td>
                         </tr>
                     `;
@@ -702,7 +852,7 @@
                         currentDate = item.date;
                         const dayRow = `
                             <tr class="week-day">
-                                <td colspan="6" style="font-weight: bold; background-color: #f1f8fe;">${item.date}</td>
+                                <td colspan="6">${item.date}</td>
                             </tr>
                         `;
                         tbody.innerHTML += dayRow;
@@ -710,16 +860,36 @@
                     
                     const row = `
                         <tr>
-                            <td></td>
-                            <td>${item.time}</td>
-                            <td>${item.subject}</td>
-                            <td>${item.cabinet}</td>
-                            <td>${item.teacher}</td>
-                            <td>${item.type}</td>
+                            <td data-label="Дата"></td>
+                            <td data-label="Время">${item.time}</td>
+                            <td data-label="Предмет">${item.subject}</td>
+                            <td data-label="Кабинет">${item.cabinet}</td>
+                            <td data-label="Преподаватель">${item.teacher}</td>
+                            <td data-label="Тип занятия">${item.type}</td>
                         </tr>
                     `;
                     tbody.innerHTML += row;
                 });
+                
+                // После заполнения таблицы снова адаптируем для мобильных
+                this.adaptTableForMobile();
+            },
+            
+            // Адаптация таблицы для мобильных устройств
+            adaptTableForMobile: function() {
+                const isMobile = window.matchMedia("(max-width: 480px)").matches;
+                const table = document.querySelector('table');
+                
+                if (isMobile) {
+                    // Добавляем атрибуты data-label для мобильного отображения
+                    const headers = Array.from(table.querySelectorAll('th')).map(th => th.textContent.trim());
+                    const cells = table.querySelectorAll('td');
+                    
+                    cells.forEach((cell, index) => {
+                        const headerIndex = index % headers.length;
+                        cell.setAttribute('data-label', headers[headerIndex]);
+                    });
+                }
             },
             
             // Поиск преподавателя
@@ -730,7 +900,7 @@
                 if (!teacher) {
                     resultsDiv.innerHTML = `
                         <div class="no-results">
-                            <i class="fas fa-exclamation-circle" style="font-size: 2rem; color: #e74c3c; margin-bottom: 1rem;"></i>
+                            <i class="fas fa-exclamation-circle"></i>
                             <p>Пожалуйста, введите фамилию преподавателя</p>
                         </div>
                     `;
@@ -763,7 +933,7 @@
                 } else {
                     resultsDiv.innerHTML = `
                         <div class="no-results">
-                            <i class="fas fa-user-times" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                            <i class="fas fa-user-times"></i>
                             <p>Преподаватель "${teacher}" не найден в расписании</p>
                             <p>Попробуйте изменить запрос или проверьте правильность ввода</p>
                         </div>
@@ -876,7 +1046,7 @@
                     });
                     
                     // Сохраняем PDF
-                    doc.save(`Расписание_РИНХ_${groupName}_${new Date().toISOString().slice(0, 10)}.pdf`);
+                    doc.save(`Расписание_${groupName}_${new Date().toISOString().slice(0, 10)}.pdf`);
                     
                     // Показываем уведомление
                     this.showNotification('Расписание успешно сохранено в PDF', 'success');
@@ -958,7 +1128,7 @@
                     XLSX.utils.book_append_sheet(wb, ws, "Расписание");
                     
                     // Генерируем файл и скачиваем
-                    XLSX.writeFile(wb, `Расписание_РИНХ_${groupName}_${new Date().toISOString().slice(0, 10)}.xlsx`);
+                    XLSX.writeFile(wb, `Расписание_${groupName}_${new Date().toISOString().slice(0, 10)}.xlsx`);
                     
                     // Показываем уведомление
                     this.showNotification('Расписание успешно сохранено в Excel', 'success');
@@ -974,12 +1144,13 @@
                 notification.style.position = 'fixed';
                 notification.style.bottom = '20px';
                 notification.style.right = '20px';
-                notification.style.padding = '15px 20px';
+                notification.style.padding = '12px 16px';
                 notification.style.borderRadius = '4px';
                 notification.style.color = 'white';
                 notification.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
                 notification.style.zIndex = '1000';
                 notification.style.animation = 'fadeIn 0.3s ease';
+                notification.style.fontSize = '0.9rem';
                 
                 if (type === 'success') {
                     notification.style.backgroundColor = '#27ae60';
@@ -1022,6 +1193,13 @@
             setupNavigation: function() {
                 const navLinks = document.querySelectorAll('.nav-link');
                 const sections = document.querySelectorAll('main > section');
+                const menuToggle = document.getElementById('menuToggle');
+                const mainNav = document.getElementById('mainNav');
+                
+                // Переключение мобильного меню
+                menuToggle.addEventListener('click', () => {
+                    mainNav.classList.toggle('active');
+                });
                 
                 navLinks.forEach(link => {
                     link.addEventListener('click', (e) => {
@@ -1033,6 +1211,14 @@
                         sections.forEach(section => section.classList.remove('active'));
                         const sectionId = link.getAttribute('data-section');
                         document.getElementById(sectionId).classList.add('active');
+                        
+                        // Закрываем меню на мобильных устройствах после выбора раздела
+                        if (window.matchMedia("(max-width: 768px)").matches) {
+                            mainNav.classList.remove('active');
+                        }
+                        
+                        // Прокрутка к верху страницы
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
                     });
                 });
             },
@@ -1049,6 +1235,11 @@
                     if (e.key === 'Enter') {
                         this.searchTeacher();
                     }
+                });
+                
+                // Обработчик изменения размера окна для адаптации таблицы
+                window.addEventListener('resize', () => {
+                    this.adaptTableForMobile();
                 });
             }
         };
