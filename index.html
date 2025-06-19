@@ -345,7 +345,7 @@
 </head>
 <body>
     <header>
-        <h1>Расписание занятий РИНХ</h1>
+        <h1>Расписание занятий </h1>
         <nav>
             <ul>
                 <li><button class="nav-link active" data-section="schedule"><i class="fas fa-calendar-alt"></i> Расписание</button></li>
@@ -445,7 +445,7 @@
     </footer>
 
     <div class="rinx-footer">
-        Ростовский институт народного хозяйства © 2025
+        РИНХ © 2025
     </div>
     
     <script>
@@ -791,7 +791,7 @@
                     // Заголовок
                     doc.setFontSize(18);
                     doc.setTextColor(40, 40, 40);
-                    doc.text("Расписание занятий РИНХ", 105, 15, { align: 'center' });
+                    doc.text("Расписание занятий", 105, 15, { align: 'center' });
                     
                     // Информация о группе
                     const groupSelect = document.getElementById('groupSelect');
@@ -901,7 +901,7 @@
                     
                     // Подготовка данных для Excel
                     const excelData = [
-                        ['Расписание занятий РИНХ'],
+                        ['Расписание занятий'],
                         [`Группа: ${groupName}`],
                         [`Актуально на: ${new Date().toLocaleDateString()}`],
                         [],
