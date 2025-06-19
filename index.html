@@ -1439,8 +1439,19 @@
             checkScreenSize: function() {
                 const isMobile = window.innerWidth <= this.config.mobileBreakpoint;
                 
-                if (isMobile && this.state.isMobileMenuOpen) {
-                    this.elements.mainNav.style.maxHeight = `${window.innerHeight - 100}px`;
+                if (isMobile) {
+                    if (this.state.isMobileMenuOpen) {
+                        this.elements.mainNav.style.maxHeight = `${window.innerHeight - 100}px`;
+                    } else {
+                        this.elements.mainNav.style.maxHeight = '0';
+                    }
+                } else {
+                    // На десктопах всегда показываем меню
+                    this.elements.mainNav.classList.add('active');
+                    this.elements.mainNav.style.maxHeight = 'none';
+                    this.state.isMobileMenuOpen = false;
+                    this.elements.menuToggle.classList.remove('active');
+                    this.elements.menuToggle.setAttribute('aria-expanded', 'false');
                 }
             },
             
